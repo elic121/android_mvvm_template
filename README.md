@@ -82,5 +82,5 @@ The **`NetworkModule`** configures the networking layer of the application using
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/your-repository.git
+git clone https://github.com/elic121/android_mvvm_template.git
 ```
