@@ -67,6 +67,7 @@ dependencies {
     // retrofit2
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
 
     // coroutines
     implementation(libs.kotlinx.coroutines.android)
@@ -75,4 +76,10 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
+
+    // timber
+    implementation(libs.timber)
+
+    // datastore
+    implementation(libs.androidx.datastore.preferences)
 }
