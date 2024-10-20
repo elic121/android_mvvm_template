@@ -17,4 +17,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btn"
+        android:text="click"
+        android:layout_width="400px"
+        android:layout_height="200px"
+        android:layout_marginTop="30px"
+        app:layout_constraintTop_toBottomOf="@+id/main_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/text_setting"
+        android:text="defualt"
+        android:textSize="30sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+    />
 </androidx.constraintlayout.widget.ConstraintLayout>
