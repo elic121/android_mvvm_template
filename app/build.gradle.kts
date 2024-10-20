@@ -95,4 +95,15 @@ dependencies {
 
     // datastore
     implementation(libs.androidx.datastore.preferences)
+
+
+    /**
+     * test implementation
+     */
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.androidx.core.testing)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
