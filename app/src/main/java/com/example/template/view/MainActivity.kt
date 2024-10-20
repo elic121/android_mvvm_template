@@ -29,12 +29,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         exampleViewModel.example.observe(this) { example ->
             val displayText = buildString {
                 append("X-Cloud-Trace-Context: ${example?.xCloudTraceContext ?: "null"}\n")
-                append("Accept: ${example?.accept ?: "null"}\n")
-                append("Upgrade-Insecure-Requests: ${example?.upgradeInsecureRequests ?: "null"}\n")
                 append("Traceparent: ${example?.traceparent ?: "null"}\n")
                 append("User-Agent: ${example?.userAgent ?: "null"}\n")
                 append("Host: ${example?.host ?: "null"}\n")
-                append("Accept-Language: ${example?.acceptLanguage ?: "null"}\n")
             }
             binding.mainText.text = displayText
         }
@@ -53,9 +50,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 dataStoreViewModel.setExampleData(currentCount + 1)
                 Timber.d("Setting new value: ${currentCount + 1}")
 
-                val updatedCount = dataStoreViewModel.getExampleData().first()
-                Timber.d("getExampleData (after increment): $updatedCount")
-                binding.textSetting.text = updatedCount.toString()
+                binding.textSetting.text = (currentCount + 1).toString()
             }
         }
 

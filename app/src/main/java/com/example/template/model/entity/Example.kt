@@ -11,12 +11,6 @@ data class Example(
     @SerializedName("X-Cloud-Trace-Context")
     val xCloudTraceContext: String? = "",
 
-    @SerializedName("Accept")
-    val accept: String? = "",
-
-    @SerializedName("Upgrade-Insecure-Requests")
-    val upgradeInsecureRequests: String? = "",
-
     @SerializedName("traceparent")
     val traceparent: String? = "",
 
@@ -25,7 +19,4 @@ data class Example(
 
     @SerializedName("Host")
     val host: String? = "",
-
-    @SerializedName("Accept-Language")
-    val acceptLanguage: String? = ""
 )

@@ -1,6 +1,5 @@
 package com.example.template.model.repository
 
-import android.util.Log
 import com.example.template.model.network.ExampleService
 import com.example.template.model.local.dao.ExampleDao
 import com.example.template.model.entity.Example
@@ -23,7 +22,7 @@ class ExampleRepository @Inject constructor(
                 }
 
             } catch (e: Exception) {
-                Example(accept = e.message)
+                Example(host=e.message)
             }
         }
     }
