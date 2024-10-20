@@ -2,8 +2,8 @@ package com.example.template.di
 
 import android.content.Context
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.template.BuildConfig
 import com.example.template.model.network.ExampleService
-import com.example.template.model.repository.DataStoreRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,7 +29,7 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://headers.jsontest.com/")
+            .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

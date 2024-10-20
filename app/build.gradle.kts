@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -5,6 +7,15 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("kotlin-parcelize")
     id("kotlin-kapt")
+}
+
+fun getAppKey(propertyKey: String): String {
+    val properties = Properties()
+    val localPropertiesFile = File(rootDir, "local.properties")
+    if (localPropertiesFile.exists()) {
+        properties.load(localPropertiesFile.inputStream())
+    }
+    return properties.getProperty(propertyKey) ?: error("Property $propertyKey not found")
 }
 
 android {
@@ -25,6 +36,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BASE_URL", getAppKey("BASE_URL"))
     }
 
     buildTypes {
@@ -82,4 +95,15 @@ dependencies {
 
     // datastore
     implementation(libs.androidx.datastore.preferences)
+
+
+    /**
+     * test implementation
+     */
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.androidx.core.testing)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
