@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.template.BuildConfig
 import com.example.template.model.network.ExampleService
-import com.example.template.model.repository.DataStoreRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

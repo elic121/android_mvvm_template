@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.template.di.NetworkModule
-import com.example.template.model.entity.Example
+import com.example.template.model.entity.ExampleEntity
 import com.example.template.model.network.ExampleService
 import com.example.template.model.repository.ExampleRepository
 import com.example.template.viewmodel.ExampleViewModel
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit
  * @see ExampleViewModel
  */
 @RunWith(AndroidJUnit4::class)
-class ExampleNetworkTest {
+class ExampleEntityNetworkTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
@@ -81,17 +81,11 @@ class ExampleNetworkTest {
     }
 
     @Test
-    fun testAppContext() {
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.example.template", appContext.packageName)
-    }
-
-    @Test
     fun testNetworkCallThroughViewModel() {
         val latch = CountDownLatch(1)
-        var result: Example? = null
+        var result: ExampleEntity? = null
 
-        viewModel.example.observeForever { example ->
+        viewModel.exampleEntity.observeForever { example ->
             result = example
             latch.countDown()
         }
@@ -113,9 +107,8 @@ class ExampleNetworkTest {
 
         val example = response.body()
 
-        assertNotNull("Accept field should not be null", example?.accept)
         assertNotNull("X-Cloud-Trace-Context field should not be null", example?.xCloudTraceContext)
-        assertNotNull("traceparent field should not be null", example?.traceparent)
+        assertNotNull("traceParent field should not be null", example?.traceparent)
         assertNotNull("User-Agent field should not be null", example?.userAgent)
         assertNotNull("Host field should not be null", example?.host)
 

@@ -1,10 +1,8 @@
 package com.example.template.view
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.example.template.R
 import com.example.template.databinding.ActivityMainBinding
 import com.example.template.util.goToActivity
 import com.example.template.util.toast
@@ -26,7 +24,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         super.onCreate(savedInstanceState)
 
         exampleViewModel.getExampleData()
-        exampleViewModel.example.observe(this) { example ->
+        exampleViewModel.exampleEntity.observe(this) { example ->
             val displayText = buildString {
                 append("X-Cloud-Trace-Context: ${example?.xCloudTraceContext ?: "null"}\n")
                 append("Traceparent: ${example?.traceparent ?: "null"}\n")
