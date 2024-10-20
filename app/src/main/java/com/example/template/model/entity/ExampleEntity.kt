@@ -1,9 +1,12 @@
 package com.example.template.model.entity
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(tableName = "example")
 data class ExampleEntity(
     @PrimaryKey(autoGenerate = true) var id: Int? = null,
@@ -19,4 +22,4 @@ data class ExampleEntity(
 
     @SerializedName("Host")
     val host: String? = "",
-)
+): Parcelable
