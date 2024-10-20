@@ -3,10 +3,10 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("kotlin-kapt")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     id("kotlin-parcelize")
-    id("kotlin-kapt")
 }
 
 fun getAppKey(propertyKey: String): String {
@@ -59,7 +59,19 @@ android {
 }
 
 dependencies {
+    /**
+     * test implementation
+     */
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.androidx.core.testing)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.espresso.core)
 
+    /**
+     * android implementation
+     */
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -96,14 +108,7 @@ dependencies {
     // datastore
     implementation(libs.androidx.datastore.preferences)
 
-
-    /**
-     * test implementation
-     */
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.runner)
-    androidTestImplementation(libs.androidx.rules)
-    androidTestImplementation(libs.androidx.core.testing)
-    androidTestImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation(libs.androidx.espresso.core)
+    // ted-permission
+    // https://github.com/ParkSangGwon/TedPermission
+    implementation(libs.tedpermission.coroutine)
 }

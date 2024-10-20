@@ -11,6 +11,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class SubActivity : BaseActivity<ActivitySubBinding>(ActivitySubBinding::inflate) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(binding.fragment1.id, BlankFragment())
+                .replace(binding.fragment2.id, BlankFragment())
+                .commit()
+        }
         setUpListeners()
     }
 
