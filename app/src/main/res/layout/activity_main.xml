@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".view.MainActivity">
+    tools:context=".view.activity.MainActivity">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:contentDescription="this is google logo"
@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/main_text"
         android:textSize="24sp"
         android:layout_marginBottom="120dp"
@@ -31,7 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn"
         android:text="click"
         android:layout_width="wrap_content"
@@ -42,7 +42,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_setting"
         android:text="defualt"
         android:textSize="30sp"
@@ -53,7 +53,7 @@
         app:layout_constraintEnd_toEndOf="parent"
     />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_move"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

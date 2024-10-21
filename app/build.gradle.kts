@@ -111,4 +111,7 @@ dependencies {
     // ted-permission
     // https://github.com/ParkSangGwon/TedPermission
     implementation(libs.tedpermission.coroutine)
+
+    // material design
+    implementation("com.google.android.material:material:1.13.0-alpha07")
 }

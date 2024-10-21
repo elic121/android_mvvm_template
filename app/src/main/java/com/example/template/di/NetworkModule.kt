@@ -22,6 +22,9 @@ import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * @see ExampleService
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {

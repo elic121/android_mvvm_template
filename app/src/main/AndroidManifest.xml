@@ -18,10 +18,10 @@
             android:name=".view.base.BaseActivity"
             android:exported="false" />
         <activity
-            android:name=".view.SubActivity"
+            android:name=".view.activity.SubActivity"
             android:exported="false" />
         <activity
-            android:name=".view.MainActivity"
+            android:name=".view.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

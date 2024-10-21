@@ -1,8 +1,7 @@
-package com.example.template.view
+package com.example.template.view.fragment
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.graphics.green
 import com.example.template.R
 import com.example.template.databinding.FragmentBlankBinding
 import com.example.template.view.base.BaseFragment

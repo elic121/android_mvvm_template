@@ -1,4 +1,4 @@
-package com.example.template.view
+package com.example.template.view.activity
 
 import android.os.Bundle
 import androidx.activity.viewModels
