@@ -11,7 +11,7 @@ class TemplateApplication: Application() {
 
 //        if (BuildConfig.DEBUG) {
             Timber.plant(object : Timber.DebugTree() {
-                override fun createStackElementTag(element: StackTraceElement): String? {
+                override fun createStackElementTag(element: StackTraceElement): String {
                     return String.format(
                         "Class:%s: Line: %s, Method: %s",
                         super.createStackElementTag(element),

@@ -113,5 +113,5 @@ dependencies {
     implementation(libs.tedpermission.coroutine)
 
     // material design
-    implementation("com.google.android.material:material:1.13.0-alpha07")
+    implementation(libs.material.v1130alpha07)
 }

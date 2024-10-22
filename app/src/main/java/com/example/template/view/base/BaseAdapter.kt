@@ -10,8 +10,7 @@ abstract class BaseAdapter<VB : ViewBinding, M>(private val bindingFactory: (Lay
     RecyclerView.Adapter<BaseAdapter.BaseViewHolder<VB>>() {
     private val TAG = "BaseAdapter"
 
-    class BaseViewHolder<VB : ViewBinding>(var binding: VB) : RecyclerView.ViewHolder(binding.root) {
-    }
+    class BaseViewHolder<VB : ViewBinding>(var binding: VB) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<VB> {
         val binding = bindingFactory(LayoutInflater.from(parent.context), parent, false)

@@ -1,5 +1,6 @@
 package com.example.template.view.activity
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -9,10 +10,10 @@ import com.example.template.util.toast
 import com.example.template.view.base.BaseActivity
 import com.example.template.viewmodel.DataStoreViewModel
 import com.example.template.viewmodel.ExampleViewModel
+import com.gun0912.tedpermission.coroutine.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
@@ -23,6 +24,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setUpExampleData()
+        setUpCount()
+        increaseCount()
+        moveToSub()
+        moveToSub2()
+    }
+
+    private fun setUpExampleData() {
         exampleViewModel.getExampleData()
         exampleViewModel.exampleEntity.observe(this) { example ->
             val displayText = buildString {
@@ -33,28 +42,55 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
             binding.mainText.text = displayText
         }
+    }
 
+    private fun setUpCount() {
         lifecycleScope.launch {
             val initialCount = dataStoreViewModel.getExampleData().first()
-            Timber.d("Initial count: $initialCount")
             binding.textSetting.text = initialCount.toString()
         }
+    }
 
+    private fun increaseCount() {
         binding.btn.setOnClickListener {
             lifecycleScope.launch {
-                val currentCount = dataStoreViewModel.getExampleData().first()
-                Timber.d("getExampleData (before increment): $currentCount")
-
-                dataStoreViewModel.setExampleData(currentCount + 1)
-                Timber.d("Setting new value: ${currentCount + 1}")
-
-                binding.textSetting.text = (currentCount + 1).toString()
+                var currentCount = dataStoreViewModel.getExampleData().first()
+                ++currentCount
+                dataStoreViewModel.setExampleData(currentCount)
+                binding.textSetting.text = currentCount.toString()
             }
         }
+    }
 
+    private fun moveToSub() {
         binding.btnMove.setOnClickListener {
             toast("move to sub")
             goToActivity(SubActivity::class.java, clearStack = true)
+        }
+    }
+
+    private fun moveToSub2() {
+        binding.btnMoveQr.setOnClickListener {
+            lifecycleScope.launch {
+                getPermission()
+            }
+        }
+    }
+
+    private suspend fun getPermission() {
+        try {
+            val permissionResult = TedPermission.create()
+                .setPermissions(Manifest.permission.CAMERA)
+                .setDeniedMessage("권한을 허용하지 않으면 QR 스캔을 할 수 없습니다.\n\n[설정] > [권한]")
+                .check()
+
+            if (permissionResult.isGranted) {
+                goToActivity(Sub2Activity::class.java)
+            } else {
+                toast("Permission Denied")
+            }
+        } catch (e: Exception) {
+            toast("error: $e")
         }
     }
 }
