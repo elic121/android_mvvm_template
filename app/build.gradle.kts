@@ -15,7 +15,7 @@ fun getAppKey(propertyKey: String): String {
     if (localPropertiesFile.exists()) {
         properties.load(localPropertiesFile.inputStream())
     }
-    return properties.getProperty(propertyKey) ?: error("Property $propertyKey not found")
+    return properties.getProperty(propertyKey) ?: "http://headers.jsontest.com/"
 }
 
 android {
