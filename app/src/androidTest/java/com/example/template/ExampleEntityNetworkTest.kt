@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.template.di.NetworkModule
 import com.example.template.model.entity.ExampleEntity
+import com.example.template.model.entity.ResultState
 import com.example.template.model.network.ExampleService
 import com.example.template.model.repository.ExampleRepository
 import com.example.template.viewmodel.ExampleViewModel
@@ -21,13 +22,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-/**
- * Example API test
- * @see NetworkModule
- * @see ExampleService
- * @see ExampleRepository
- * @see ExampleViewModel
- */
 @RunWith(AndroidJUnit4::class)
 class ExampleEntityNetworkTest {
     @get:Rule
@@ -83,11 +77,13 @@ class ExampleEntityNetworkTest {
     @Test
     fun testNetworkCallThroughViewModel() {
         val latch = CountDownLatch(1)
-        var result: ExampleEntity? = null
+        var result: ResultState<ExampleEntity>? = null
 
-        viewModel.exampleEntity.observeForever { example ->
-            result = example
-            latch.countDown()
+        viewModel.exampleEntity.observeForever { state ->
+            result = state
+            if (state !is ResultState.Loading) {
+                latch.countDown()
+            }
         }
 
         viewModel.getExampleData()
@@ -95,7 +91,21 @@ class ExampleEntityNetworkTest {
         assertTrue("Network call timed out", latch.await(5, TimeUnit.SECONDS))
         assertNotNull("Response should not be null", result)
 
-        println("Response: $result")
+        when (val currentState = result) {
+            is ResultState.Success -> {
+                val example = currentState.data
+                assertNotNull("X-Cloud-Trace-Context should not be null", example.xCloudTraceContext)
+                assertNotNull("Traceparent should not be null", example.traceparent)
+                assertNotNull("User-Agent should not be null", example.userAgent)
+                assertNotNull("Host should not be null", example.host)
+                println("Response: $example")
+            }
+            is ResultState.Error -> {
+                println("Error: ${currentState.message}")
+                fail("Expected a successful response, but got an error: ${currentState.message}")
+            }
+            else -> fail("Unexpected state")
+        }
     }
 
     @Test
@@ -107,13 +117,10 @@ class ExampleEntityNetworkTest {
 
         val example = response.body()
 
-        assertNotNull("X-Cloud-Trace-Context field should not be null", example?.xCloudTraceContext)
-        assertNotNull("traceParent field should not be null", example?.traceparent)
-        assertNotNull("User-Agent field should not be null", example?.userAgent)
-        assertNotNull("Host field should not be null", example?.host)
-
-        // error case
-        // assertTrue("Upgrade-Insecure-Requests field should not be empty or null", !example?.upgradeInsecureRequests.isNullOrEmpty())
+        assertNotNull("X-Cloud-Trace-Context should not be null", example?.xCloudTraceContext)
+        assertNotNull("Traceparent should not be null", example?.traceparent)
+        assertNotNull("User-Agent should not be null", example?.userAgent)
+        assertNotNull("Host should not be null", example?.host)
 
         println("API Response: ${response.body()}")
     }

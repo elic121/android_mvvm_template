@@ -1,16 +1,15 @@
 package com.example.template.di
 
-import android.content.Context
-import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.template.BuildConfig
+import com.example.template.model.network.AuthService
 import com.example.template.model.network.ExampleService
+import com.example.template.model.repository.AuthRepository
+import com.example.template.model.repository.DataStoreRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -24,6 +23,7 @@ import javax.inject.Singleton
 
 /**
  * @see ExampleService
+ * @see AuthService
  */
 @Module
 @InstallIn(SingletonComponent::class)
@@ -54,24 +54,52 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAppInterceptor(@ApplicationContext context: Context): AppInterceptor {
-        return AppInterceptor(context)
+    fun provideAppInterceptor(dataStoreRepository : DataStoreRepository, authRepository: AuthRepository): AppInterceptor {
+        return AppInterceptor(dataStoreRepository, authRepository)
     }
 
     class AppInterceptor @Inject constructor(
-        @ApplicationContext private val context: Context,
+        private val dataStoreRepository: DataStoreRepository,
+        private val authRepository: AuthRepository
     ) : Interceptor {
 
         @Throws(IOException::class)
-        override fun intercept(chain: Interceptor.Chain): Response = runBlocking {
-            val token = context.dataStore.data.map { preferences ->
-                preferences[stringPreferencesKey("access_token")] ?: ""
-            }.first()
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val token = runBlocking { dataStoreRepository.getAccessToken().first() }
 
-            val newRequest = chain.request().newBuilder()
-                .addHeader("Authorization", "Bearer $token")
+            val request = chain.request().newBuilder()
+                .apply {
+                    token?.let {
+                        addHeader("Authorization", "Bearer $token")
+                    }
+                }
                 .build()
-            chain.proceed(newRequest)
+
+            val response = chain.proceed(request)
+            if (response.code == 401) {
+                response.close()
+
+                val refreshToken = runBlocking { dataStoreRepository.getRefreshToken().first() }
+                if (refreshToken != null) {
+                    val newAccessToken = runBlocking {
+                        val tokenResponse = authRepository.refreshAccessToken(refreshToken)
+                        if (tokenResponse.isSuccess) {
+                            tokenResponse.getOrNull()
+                        } else {
+                            null
+                        }
+                    }
+
+                    if (newAccessToken != null) {
+                        val newRequest = request.newBuilder()
+                            .header("Authorization", "Bearer $newAccessToken")
+                            .build()
+                        return chain.proceed(newRequest)
+                    }
+                }
+            }
+
+            return response
         }
     }
 
@@ -79,5 +107,11 @@ object NetworkModule {
     @Singleton
     fun provideExampleService(retrofit: Retrofit): ExampleService {
         return retrofit.create(ExampleService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthService(retrofit: Retrofit): AuthService {
+        return retrofit.create(AuthService::class.java)
     }
 }

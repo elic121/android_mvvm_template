@@ -5,8 +5,10 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.template.model.entity.user.UserEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class DataStoreRepository @Inject constructor(
@@ -15,6 +17,7 @@ class DataStoreRepository @Inject constructor(
     companion object {
         val EXAMPLE_KEY = intPreferencesKey("count_number")
         val ACCESS_TOKEN = stringPreferencesKey("access_token")
+        val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
     }
 
     suspend fun setExampleData(data: Int) {
@@ -30,15 +33,22 @@ class DataStoreRepository @Inject constructor(
         }
     }
 
-    suspend fun setAccessToken(token: String) {
+    suspend fun saveTokens(accessToken: String, refreshToken: String? = null) {
         dataStore.edit { settings ->
-            settings[ACCESS_TOKEN] = token
+            settings[ACCESS_TOKEN] = accessToken
+            refreshToken?.let { settings[REFRESH_TOKEN] = refreshToken }
         }
     }
 
     fun getAccessToken(): Flow<String> {
         return dataStore.data.map { preferences ->
             preferences[ACCESS_TOKEN] ?: ""
+        }
+    }
+
+    fun getRefreshToken(): Flow<String> {
+        return dataStore.data.map { preferences ->
+            preferences[REFRESH_TOKEN] ?: ""
         }
     }
 }
