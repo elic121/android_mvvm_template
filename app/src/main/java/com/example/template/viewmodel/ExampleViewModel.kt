@@ -9,7 +9,6 @@ import com.example.template.model.entity.ResultState
 import com.example.template.model.repository.ExampleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel

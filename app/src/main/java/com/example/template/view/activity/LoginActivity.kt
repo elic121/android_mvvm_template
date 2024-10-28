@@ -13,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.template.BuildConfig
 import com.example.template.databinding.ActivityLoginBinding
 import com.example.template.util.handleState
-import com.example.template.util.toast
 import com.example.template.view.base.BaseActivity
 import com.example.template.viewmodel.AuthViewModel
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption

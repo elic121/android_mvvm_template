@@ -5,7 +5,6 @@ import com.example.template.model.entity.auth.AuthResponse
 import com.example.template.model.entity.auth.TokenResponse
 import com.example.template.model.network.AuthService
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 

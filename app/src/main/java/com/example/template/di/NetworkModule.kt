@@ -19,6 +19,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 /**
@@ -54,13 +55,13 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAppInterceptor(dataStoreRepository : DataStoreRepository, authRepository: AuthRepository): AppInterceptor {
-        return AppInterceptor(dataStoreRepository, authRepository)
+    fun provideAppInterceptor(dataStoreRepository : DataStoreRepository, authRepositoryProvider: Provider<AuthRepository>): AppInterceptor {
+        return AppInterceptor(dataStoreRepository, authRepositoryProvider)
     }
 
     class AppInterceptor @Inject constructor(
         private val dataStoreRepository: DataStoreRepository,
-        private val authRepository: AuthRepository
+        private val authRepositoryProvider: Provider<AuthRepository>
     ) : Interceptor {
 
         @Throws(IOException::class)
@@ -69,9 +70,7 @@ object NetworkModule {
 
             val request = chain.request().newBuilder()
                 .apply {
-                    token?.let {
-                        addHeader("Authorization", "Bearer $token")
-                    }
+                    addHeader("Authorization", "Bearer $token")
                 }
                 .build()
 
@@ -80,22 +79,20 @@ object NetworkModule {
                 response.close()
 
                 val refreshToken = runBlocking { dataStoreRepository.getRefreshToken().first() }
-                if (refreshToken != null) {
-                    val newAccessToken = runBlocking {
-                        val tokenResponse = authRepository.refreshAccessToken(refreshToken)
-                        if (tokenResponse.isSuccess) {
-                            tokenResponse.getOrNull()
-                        } else {
-                            null
-                        }
+                val newAccessToken = runBlocking {
+                    val tokenResponse = authRepositoryProvider.get().refreshAccessToken(refreshToken)
+                    if (tokenResponse.isSuccess) {
+                        tokenResponse.getOrNull()
+                    } else {
+                        null
                     }
+                }
 
-                    if (newAccessToken != null) {
-                        val newRequest = request.newBuilder()
-                            .header("Authorization", "Bearer $newAccessToken")
-                            .build()
-                        return chain.proceed(newRequest)
-                    }
+                if (newAccessToken != null) {
+                    val newRequest = request.newBuilder()
+                        .header("Authorization", "Bearer $newAccessToken")
+                        .build()
+                    return chain.proceed(newRequest)
                 }
             }
 

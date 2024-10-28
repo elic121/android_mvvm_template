@@ -15,7 +15,7 @@ fun getAppKey(propertyKey: String): String {
     if (localPropertiesFile.exists()) {
         properties.load(localPropertiesFile.inputStream())
     }
-    return properties.getProperty(propertyKey) ?: "http://headers.jsontest.com/"
+    return properties.getProperty(propertyKey) ?: "$propertyKey not found"
 }
 
 android {
@@ -117,7 +117,7 @@ dependencies {
     implementation(libs.material.v1130alpha07)
 
     // google oauth
-    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
-    implementation("androidx.credentials:credentials:1.2.2")
-    implementation("androidx.credentials:credentials-play-services-auth:1.2.2")
+    implementation(libs.googleid)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
 }
