@@ -8,7 +8,6 @@ import javax.inject.Inject
 
 class ExampleRepository @Inject constructor(
     private val exampleService: ExampleService,
-//    private val exampleDao: ExampleDao
 ){
     suspend fun getExampleData(): Result<ExampleEntity> {
         return withContext(Dispatchers.IO) {

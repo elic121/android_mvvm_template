@@ -60,8 +60,8 @@ class SubActivity : BaseActivity<ActivitySubBinding>(ActivitySubBinding::inflate
 
     private fun setUpAdapter() {
         val itemClickListener = object : ItemClickListener {
-            override fun onClick(item: Any?) {
-                val example = item as ExampleEntity
+            override fun onClick(objects: Any?) {
+                val example = objects as ExampleEntity
                 toast("Host: ${example.host} clicked")
             }
         }
