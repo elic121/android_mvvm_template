@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import com.example.template.model.entity.ResultState
 
 fun Context.toast(message: Any) {
     Toast.makeText(this, message.toString(), Toast.LENGTH_SHORT).show()
@@ -33,5 +34,18 @@ fun Context.goToActivity(activity: Class<*>, extras: Bundle? = null, clearStack:
     } catch (e: Exception) {
         this.toast(e.toString())
         e.printStackTrace()
+    }
+}
+
+fun <T> Context.handleState(
+    state: ResultState<T>,
+    onLoading: () -> Unit,
+    onSuccess: (data: T) -> Unit,
+    onError: (message: String) -> Unit,
+) {
+    when (state) {
+        is ResultState.Loading -> onLoading()
+        is ResultState.Success -> onSuccess(state.data)
+        is ResultState.Error -> onError(state.message)
     }
 }

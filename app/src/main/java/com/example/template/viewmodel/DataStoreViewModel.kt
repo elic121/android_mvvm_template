@@ -23,13 +23,17 @@ class DataStoreViewModel @Inject constructor(
         return dataStoreRepository.getExampleData()
     }
 
-    fun setAccessToken(token: String) {
+    fun saveTokens(accessToken: String, refreshToken: String?) {
         viewModelScope.launch {
-            dataStoreRepository.setAccessToken(token)
+            dataStoreRepository.saveTokens(accessToken, refreshToken)
         }
     }
 
     fun getAccessToken(): Flow<String> {
         return dataStoreRepository.getAccessToken()
+    }
+
+    fun getRefreshToken(): Flow<String> {
+        return dataStoreRepository.getRefreshToken()
     }
 }

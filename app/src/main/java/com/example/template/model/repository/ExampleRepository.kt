@@ -9,18 +9,20 @@ import javax.inject.Inject
 class ExampleRepository @Inject constructor(
     private val exampleService: ExampleService,
 ){
-    suspend fun getExampleData(): ExampleEntity {
+    suspend fun getExampleData(): Result<ExampleEntity> {
         return withContext(Dispatchers.IO) {
             try {
                 val response = exampleService.getExampleData().execute()
                 if (response.isSuccessful) {
-                    response.body() ?: ExampleEntity()
+                    response.body()?.let { exampleEntity ->
+                        Result.success(exampleEntity)
+                    } ?: Result.failure(Exception("Empty response body"))
                 } else {
-                    ExampleEntity()
+                    Result.failure(Exception(response.errorBody()?.string() ?: "Unknown error"))
                 }
 
             } catch (e: Exception) {
-                ExampleEntity(host=e.message)
+                Result.failure(e)
             }
         }
     }

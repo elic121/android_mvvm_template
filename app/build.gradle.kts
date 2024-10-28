@@ -38,6 +38,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "BASE_URL", getAppKey("BASE_URL"))
+        buildConfigField("String", "SERVER_CLIENT_ID", getAppKey("SERVER_CLIENT_ID"))
     }
 
     buildTypes {
@@ -114,4 +115,9 @@ dependencies {
 
     // material design
     implementation(libs.material.v1130alpha07)
+
+    // google oauth
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    implementation("androidx.credentials:credentials:1.2.2")
+    implementation("androidx.credentials:credentials-play-services-auth:1.2.2")
 }

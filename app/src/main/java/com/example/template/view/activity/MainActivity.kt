@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.template.databinding.ActivityMainBinding
 import com.example.template.util.goToActivity
+import com.example.template.util.handleState
 import com.example.template.util.toast
 import com.example.template.view.base.BaseActivity
 import com.example.template.viewmodel.DataStoreViewModel
@@ -33,14 +34,25 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     private fun setUpExampleData() {
         exampleViewModel.getExampleData()
-        exampleViewModel.exampleEntity.observe(this) { example ->
-            val displayText = buildString {
-                append("X-Cloud-Trace-Context: ${example?.xCloudTraceContext ?: "null"}\n")
-                append("Traceparent: ${example?.traceparent ?: "null"}\n")
-                append("User-Agent: ${example?.userAgent ?: "null"}\n")
-                append("Host: ${example?.host ?: "null"}\n")
-            }
-            binding.mainText.text = displayText
+        exampleViewModel.exampleEntity.observe(this) { state ->
+            handleState(
+                state,
+                onLoading = {
+                    binding.mainText.text = "Loading data, please wait..."
+                },
+                onSuccess = { example ->
+                    val displayText = buildString {
+                        append("X-Cloud-Trace-Context: ${example.xCloudTraceContext ?: "null"}\n")
+                        append("Traceparent: ${example.traceparent ?: "null"}\n")
+                        append("User-Agent: ${example.userAgent ?: "null"}\n")
+                        append("Host: ${example.host ?: "null"}\n")
+                    }
+                    binding.mainText.text = displayText
+                },
+                onError = { errorMessage ->
+                    binding.mainText.text = "Failed to load data: $errorMessage"
+                }
+            )
         }
     }
 
